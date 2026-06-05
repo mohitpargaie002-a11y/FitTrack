@@ -11,6 +11,7 @@ import {
 import { getPlans } from "../../api/workoutPlans";
 import { getDashboardStats } from "../../api/stats";
 import type { DashboardStatsDto, WorkoutPlan } from "../../types";
+import { SkeletonCard, SkeletonBar } from "../../components/ui/Skeleton";
 
 const TYPE_COLOR: Record<string, string> = {
   Chest: "#7c3aed",
@@ -28,10 +29,19 @@ function StatCard({
   sub?: string;
 }) {
   return (
-    <div className="bg-white rounded-xl border border-gray-100 px-4 py-3">
-      <div className="text-xl font-medium text-gray-900">{value}</div>
-      <div className="text-xs text-gray-500 mt-0.5">{label}</div>
-      {sub && <div className="text-xs text-gray-400 mt-0.5">{sub}</div>}
+    <div
+      className="rounded-xl px-4 py-3"
+      style={{ background: "#13161f", border: "1px solid #1e2130" }}
+    >
+      <div className="text-xl font-medium text-white">{value}</div>
+      <div className="text-xs mt-0.5" style={{ color: "#9ca3af" }}>
+        {label}
+      </div>
+      {sub && (
+        <div className="text-xs mt-0.5" style={{ color: "#6b7280" }}>
+          {sub}
+        </div>
+      )}
     </div>
   );
 }
@@ -83,34 +93,52 @@ export default function DashboardPage() {
 
   if (loading)
     return (
-      <div className="flex items-center justify-center h-64 text-sm text-gray-400">
-        Loading dashboard...
+      <div className="max-w-2xl mx-auto px-4 py-6 space-y-5">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <SkeletonCard />
+          <SkeletonCard />
+          <SkeletonCard />
+          <SkeletonCard />
+        </div>
+        <div
+          className="rounded-xl p-4"
+          style={{ background: "#13161f", border: "1px solid #1e2130" }}
+        >
+          <div className="h-4 bg-gray-100 rounded w-40 mb-4 animate-pulse" />
+          <SkeletonBar />
+        </div>
       </div>
     );
 
-  if (!stats) return null;
+  if (!stats)
+    return (
+      <div className="flex items-center justify-center py-20 text-sm text-gray-400">
+        No stats yet — start logging workouts!
+      </div>
+    );
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-6 space-y-5">
-      <h2 className="text-base font-medium text-gray-900">
-        Efficiency dashboard
-      </h2>
+      <h2 className="text-base font-medium text-white">Dashboard</h2>
 
-      {/* Top stat cards */}
+      {/* Stat cards */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatCard label="Current streak" value={`${stats.currentStreak}d`} />
         <StatCard label="Longest streak" value={`${stats.longestStreak}d`} />
         <StatCard
           label="Consistency"
           value={`${stats.overallConsistency}%`}
-          sub={`${stats.totalCompleted}/${stats.totalScheduled}`}
+          sub={`${stats.totalCompleted}/${stats.totalScheduled} days`}
         />
         <StatCard label="Days remaining" value={stats.daysRemaining} />
       </div>
 
-      {/* Per-type consistency */}
-      <div className="bg-white rounded-xl border border-gray-100 p-4 space-y-3">
-        <h3 className="text-sm font-medium text-gray-700">
+      {/* Consistency by type */}
+      <div
+        className="rounded-xl p-4"
+        style={{ background: "#13161f", border: "1px solid #1e2130" }}
+      >
+        <h3 className="text-sm font-medium mb-3" style={{ color: "#e5e7eb" }}>
           Consistency by type
         </h3>
         <ConsistencyBar
@@ -131,8 +159,11 @@ export default function DashboardPage() {
       </div>
 
       {/* Weekly bar chart */}
-      <div className="bg-white rounded-xl border border-gray-100 p-4">
-        <h3 className="text-sm font-medium text-gray-700 mb-3">
+      <div
+        className="rounded-xl p-4"
+        style={{ background: "#13161f", border: "1px solid #1e2130" }}
+      >
+        <h3 className="text-sm font-medium mb-3" style={{ color: "#e5e7eb" }}>
           Weekly completions
         </h3>
         {stats.weeklyBars.length === 0 ? (
@@ -169,41 +200,12 @@ export default function DashboardPage() {
         )}
       </div>
 
-      {/* Exercise breakdown */}
-      <div className="bg-white rounded-xl border border-gray-100 p-4">
-        <h3 className="text-sm font-medium text-gray-700 mb-3">
-          Exercise completion rates
-        </h3>
-        {stats.exerciseStats.length === 0 ? (
-          <p className="text-xs text-gray-400 text-center py-6">No data yet</p>
-        ) : (
-          <div className="space-y-2.5">
-            {stats.exerciseStats
-              .sort((a, b) => a.completionRate - b.completionRate)
-              .map((ex) => (
-                <div key={ex.exerciseName}>
-                  <div className="flex justify-between text-xs text-gray-600 mb-1">
-                    <span>{ex.exerciseName}</span>
-                    <span className="font-medium">{ex.completionRate}%</span>
-                  </div>
-                  <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                    <div
-                      className="h-full rounded-full transition-all"
-                      style={{
-                        width: `${ex.completionRate}%`,
-                        background: TYPE_COLOR[ex.dayType] ?? "#888",
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
-          </div>
-        )}
-      </div>
-
       {/* Heatmap */}
-      <div className="bg-white rounded-xl border border-gray-100 p-4">
-        <h3 className="text-sm font-medium text-gray-700 mb-3">
+      <div
+        className="rounded-xl p-4"
+        style={{ background: "#13161f", border: "1px solid #1e2130" }}
+      >
+        <h3 className="text-sm font-medium mb-3" style={{ color: "#e5e7eb" }}>
           Activity heatmap
         </h3>
         <div className="flex flex-wrap gap-1">
