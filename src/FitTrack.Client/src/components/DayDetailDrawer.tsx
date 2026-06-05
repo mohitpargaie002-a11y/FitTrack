@@ -51,7 +51,10 @@ export default function DayDetailDrawer({ planId, date, onClose }: Props) {
   return (
     <>
       {/* Backdrop */}
-      <div className="fixed inset-0 bg-black/30 z-40" onClick={onClose} />
+      <div
+        className="fixed inset-0 bg-black/30 z-40"
+        onClick={() => onClose()}
+      />
 
       {/* Drawer */}
       <div
@@ -82,7 +85,7 @@ export default function DayDetailDrawer({ planId, date, onClose }: Props) {
               )}
             </div>
             <button
-              onClick={onClose}
+              onClick={() => onClose()}
               className="text-gray-400 hover:text-gray-600 text-xl leading-none mt-1"
             >
               ×

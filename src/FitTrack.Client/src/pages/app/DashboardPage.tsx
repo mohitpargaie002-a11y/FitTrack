@@ -72,8 +72,7 @@ function ConsistencyBar({
 }
 
 export default function DashboardPage() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [plan, setPlan] = useState<WorkoutPlan | null>(null);
+  const [, setPlan] = useState<WorkoutPlan | null>(null);
   const [stats, setStats] = useState<DashboardStatsDto | null>(null);
   const [loading, setLoading] = useState(true);
 

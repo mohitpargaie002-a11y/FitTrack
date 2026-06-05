@@ -8,22 +8,6 @@ import { SkeletonCalendar, SkeletonCard } from "../../components/ui/Skeleton";
 import ToastContainer from "../../components/ui/ToastContainer";
 import { useToast } from "../../hooks/useToast";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const DAY_COLORS: Record<string, string> = {
-  Chest: "border text-purple-300",
-  Back: "border text-emerald-300",
-  Abs: "border text-amber-300",
-  Rest: "border text-gray-600",
-};
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const DAY_DONE_COLORS: Record<string, string> = {
-  Chest: "border text-purple-100",
-  Back: "border text-emerald-100",
-  Abs: "border text-amber-100",
-  Rest: "border text-gray-400",
-};
-
 const DAY_LABELS: Record<string, string> = {
   Chest: "C+S",
   Back: "B+S",
