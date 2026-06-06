@@ -13,21 +13,38 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Database — handle both Railway DATABASE_URL and manual connection string
+// Database — diagnostic version
 var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+var manualConn = builder.Configuration.GetConnectionString("DefaultConnection");
+
+Console.WriteLine($"=== DB DIAGNOSTIC ===");
+Console.WriteLine($"DATABASE_URL present: {!string.IsNullOrEmpty(databaseUrl)}");
+Console.WriteLine($"DATABASE_URL value: {databaseUrl ?? "NULL"}");
+Console.WriteLine($"Manual conn present: {!string.IsNullOrEmpty(manualConn)}");
+Console.WriteLine($"Manual conn value: {manualConn ?? "NULL"}");
+Console.WriteLine($"====================");
+
 string connectionString;
 
 if (!string.IsNullOrEmpty(databaseUrl))
 {
-    // Parse Railway's postgres URL format:
-    // postgresql://user:password@host:port/database
-    var uri = new Uri(databaseUrl);
-    var userInfo = uri.UserInfo.Split(':');
-    connectionString = $"Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]};SSL Mode=Require;Trust Server Certificate=true";
+    try
+    {
+        var uri = new Uri(databaseUrl);
+        var userInfo = uri.UserInfo.Split(':');
+        connectionString = $"Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]};SSL Mode=Require;Trust Server Certificate=true";
+        Console.WriteLine($"Parsed connection string: Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')}");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Failed to parse DATABASE_URL: {ex.Message}");
+        connectionString = manualConn!;
+    }
 }
 else
 {
-    connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
+    Console.WriteLine("Falling back to manual connection string");
+    connectionString = manualConn!;
 }
 
 builder.Services.AddDbContext<AppDbContext>(options =>
