@@ -13,16 +13,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Database — diagnostic version
 var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
 var manualConn = builder.Configuration.GetConnectionString("DefaultConnection");
-
-Console.WriteLine($"=== DB DIAGNOSTIC ===");
-Console.WriteLine($"DATABASE_URL present: {!string.IsNullOrEmpty(databaseUrl)}");
-Console.WriteLine($"DATABASE_URL value: {databaseUrl ?? "NULL"}");
-Console.WriteLine($"Manual conn present: {!string.IsNullOrEmpty(manualConn)}");
-Console.WriteLine($"Manual conn value: {manualConn ?? "NULL"}");
-Console.WriteLine($"====================");
 
 string connectionString;
 
@@ -33,17 +25,15 @@ if (!string.IsNullOrEmpty(databaseUrl))
         var uri = new Uri(databaseUrl);
         var userInfo = uri.UserInfo.Split(':');
         connectionString = $"Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]};SSL Mode=Require;Trust Server Certificate=true";
-        Console.WriteLine($"Parsed connection string: Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')}");
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"Failed to parse DATABASE_URL: {ex.Message}");
+        Console.WriteLine($"Error parsing DATABASE_URL: {ex.Message}");
         connectionString = manualConn!;
     }
 }
 else
 {
-    Console.WriteLine("Falling back to manual connection string");
     connectionString = manualConn!;
 }
 
@@ -79,8 +69,9 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowClient", policy =>
         policy.WithOrigins(
-            "http://localhost:5173",
-            "https://fittrack-client.vercel.app"
+        "http://localhost:5173",
+        "https://fit-track-pmjg-lnifpfivy-mohit-pargaie-s-projects.vercel.app",
+        "https://fit-track-pmjg.vercel.app"
         )
         .AllowAnyHeader()
         .AllowAnyMethod());
@@ -88,11 +79,8 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseCors("AllowClient");
 app.UseAuthentication();
