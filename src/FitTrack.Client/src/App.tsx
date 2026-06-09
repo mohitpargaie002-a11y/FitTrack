@@ -6,6 +6,8 @@ import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 import DashboardPage from "./pages/app/DashboardPage";
 import CalendarPage from "./pages/app/CalenderPage";
+import PlanBuilderPage from "./pages/app/PlanBuilderPage";
+import PlanSettingsPage from "./pages/app/PlanSettingsPage";
 
 function App() {
   return (
@@ -24,6 +26,9 @@ function App() {
             <Route path="/" element={<CalendarPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
           </Route>
+          <Route path="/plan/new" element={<PlanBuilderPage />} />
+          <Route path="/plan/settings" element={<PlanSettingsPage />} />
+          <Route path="/plan/new" element={<PlanBuilderPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </AuthProvider>

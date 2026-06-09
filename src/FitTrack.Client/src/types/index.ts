@@ -36,13 +36,23 @@ export interface PlanDay {
   exercises: ExerciseTemplate[];
 }
 
-export interface WorkoutPlan {
+export interface CycleConfigDto {
+  workDays: number;
+  restDays: number;
+  slots: string[];
+}
+
+export interface WorkoutPlanV2Dto {
   id: string;
   name: string;
   startDate: string;
   endDate: string;
+  cycleConfig: CycleConfigDto;
   planDays: PlanDay[];
 }
+
+// Keep this alias so existing code doesn't break
+export type WorkoutPlan = WorkoutPlanV2Dto;
 
 export interface LogEntryDto {
   id: string;

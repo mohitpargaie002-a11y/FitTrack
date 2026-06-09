@@ -3,7 +3,6 @@ import { getCalendar } from "../../api/logs";
 import { getPlans } from "../../api/workoutPlans";
 import type { CalendarDayDto, WorkoutPlan } from "../../types";
 import DayDetailDrawer from "../../components/DayDetailDrawer";
-import EmptyState from "../../components/ui/EmptyState";
 import { SkeletonCalendar, SkeletonCard } from "../../components/ui/Skeleton";
 import ToastContainer from "../../components/ui/ToastContainer";
 import { useToast } from "../../hooks/useToast";
@@ -30,6 +29,11 @@ const MONTHS = [
 ];
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
+// Add this helper at the top of CalendarPage.tsx
+const parseDate = (dateStr: string) => {
+  const [y, m, d] = dateStr.split("-").map(Number);
+  return new Date(y, m - 1, d);
+};
 export default function CalendarPage() {
   const today = new Date();
   const [year, setYear] = useState(today.getFullYear());
@@ -84,7 +88,7 @@ export default function CalendarPage() {
 
   const handleDayClick = (date: string, dayType: string) => {
     if (dayType === "Rest") return;
-    if (new Date(date) > today) return;
+    if (parseDate(date) > today) return;
     setSelectedDate(date);
   };
 
@@ -106,8 +110,6 @@ export default function CalendarPage() {
       </div>
     );
 
-  if (!plan) return <EmptyState onSeeded={loadPlan} />;
-
   return (
     <div className="max-w-2xl mx-auto px-4 py-6">
       <ToastContainer toasts={toasts} />
@@ -122,7 +124,7 @@ export default function CalendarPage() {
           <div
             key={s.label}
             className="rounded-xl px-4 py-3"
-            style={{ background: "#13161f", border: "1px solid #1e2130" }}
+            style={{ background: "#0d1421", border: "1px solid #1a2332" }}
           >
             <div className="text-xl font-medium text-white">{s.value}</div>
             <div className="text-xs mt-0.5" style={{ color: "#6b7280" }}>
@@ -135,21 +137,27 @@ export default function CalendarPage() {
       {/* Calendar */}
       <div
         className="rounded-2xl p-4"
-        style={{ background: "#13161f", border: "1px solid #1e2130" }}
+        style={{ background: "#0d1421", border: "1px solid #1a2332" }}
       >
         <div className="flex items-center justify-between mb-4">
           <button
             onClick={prevMonth}
-            className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors text-lg"
+            className="p-1.5 rounded-lg transition-colors text-lg"
+            style={{ color: "#9ca3af" }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "#e5e7eb")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "#9ca3af")}
           >
             ‹
           </button>
-          <span className="font-medium text-gray-900">
+          <span className="font-medium" style={{ color: "#e5e7eb" }}>
             {MONTHS[month - 1]} {year}
           </span>
           <button
             onClick={nextMonth}
-            className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors text-lg"
+            className="p-1.5 rounded-lg transition-colors text-lg"
+            style={{ color: "#9ca3af" }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "#e5e7eb")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "#9ca3af")}
           >
             ›
           </button>
@@ -178,9 +186,9 @@ export default function CalendarPage() {
               <div key={`e-${i}`} />
             ))}
             {days.map((day) => {
-              const date = new Date(day.date);
-              const isToday =
-                day.date.slice(0, 10) === today.toISOString().slice(0, 10);
+              const date = parseDate(day.date);
+              const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+              const isToday = day.date.slice(0, 10) === todayStr;
               const isFuture = date > today;
               const isClickable = day.dayType !== "Rest" && !isFuture;
               const bgStyle = day.isCompleted

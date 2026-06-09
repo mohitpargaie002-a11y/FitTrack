@@ -31,7 +31,7 @@ function StatCard({
   return (
     <div
       className="rounded-xl px-4 py-3"
-      style={{ background: "#13161f", border: "1px solid #1e2130" }}
+      style={{ background: "#0d1421", border: "1px solid #1a2332" }}
     >
       <div className="text-xl font-medium text-white">{value}</div>
       <div className="text-xs mt-0.5" style={{ color: "#9ca3af" }}>
@@ -101,7 +101,7 @@ export default function DashboardPage() {
         </div>
         <div
           className="rounded-xl p-4"
-          style={{ background: "#13161f", border: "1px solid #1e2130" }}
+          style={{ background: "#0d1421", border: "1px solid #1a2332" }}
         >
           <div className="h-4 bg-gray-100 rounded w-40 mb-4 animate-pulse" />
           <SkeletonBar />
@@ -135,7 +135,7 @@ export default function DashboardPage() {
       {/* Consistency by type */}
       <div
         className="rounded-xl p-4"
-        style={{ background: "#13161f", border: "1px solid #1e2130" }}
+        style={{ background: "#0d1421", border: "1px solid #1a2332" }}
       >
         <h3 className="text-sm font-medium mb-3" style={{ color: "#e5e7eb" }}>
           Consistency by type
@@ -160,7 +160,7 @@ export default function DashboardPage() {
       {/* Weekly bar chart */}
       <div
         className="rounded-xl p-4"
-        style={{ background: "#13161f", border: "1px solid #1e2130" }}
+        style={{ background: "#0d1421", border: "1px solid #1a2332" }}
       >
         <h3 className="text-sm font-medium mb-3" style={{ color: "#e5e7eb" }}>
           Weekly completions
@@ -202,7 +202,7 @@ export default function DashboardPage() {
       {/* Heatmap */}
       <div
         className="rounded-xl p-4"
-        style={{ background: "#13161f", border: "1px solid #1e2130" }}
+        style={{ background: "#0d1421", border: "1px solid #1a2332" }}
       >
         <h3 className="text-sm font-medium mb-3" style={{ color: "#e5e7eb" }}>
           Activity heatmap

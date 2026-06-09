@@ -37,7 +37,13 @@ export default function DayDetailDrawer({ planId, date, onClose }: Props) {
     if (updated.isCompleted) onClose(true); // ← close + trigger toast
   };
 
-  const formatted = new Date(date).toLocaleDateString("en-IN", {
+  // Add this helper at the top of CalendarPage.tsx
+  const parseDate = (dateStr: string) => {
+    const [y, m, d] = dateStr.split("-").map(Number);
+    return new Date(y, m - 1, d);
+  };
+
+  const formatted = parseDate(date).toLocaleDateString("en-IN", {
     weekday: "long",
     day: "numeric",
     month: "long",
