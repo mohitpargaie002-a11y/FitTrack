@@ -28,7 +28,6 @@ function App() {
           </Route>
           <Route path="/plan/new" element={<PlanBuilderPage />} />
           <Route path="/plan/settings" element={<PlanSettingsPage />} />
-          <Route path="/plan/new" element={<PlanBuilderPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </AuthProvider>

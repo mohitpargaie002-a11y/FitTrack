@@ -27,7 +27,7 @@ export default function AppLayout() {
       {/* Top bar */}
       <div
         className="sticky top-0 z-10 flex items-center justify-between px-5 py-3.5"
-        style={{ background: "#0d1421", borderBottom: "1px solid #1a2332" }}
+        style={{ background: "#0f1624", borderBottom: "1px solid #1f2a3a" }}
       >
         {/* Logo */}
         <div className="flex items-center gap-2.5">
@@ -41,17 +41,9 @@ export default function AppLayout() {
         <div className="relative" ref={menuRef}>
           <button
             onClick={() => setMenuOpen((o) => !o)}
-            className="flex items-center gap-2 px-2 py-1.5 rounded-lg transition-colors"
-            style={{
-              background: menuOpen ? "#1a2332" : "transparent",
-              border: "1px solid transparent",
-            }}
-            onMouseEnter={(e) => {
-              if (!menuOpen) e.currentTarget.style.background = "#13161f";
-            }}
-            onMouseLeave={(e) => {
-              if (!menuOpen) e.currentTarget.style.background = "transparent";
-            }}
+            className={`flex items-center gap-2 px-2 py-1.5 rounded-lg border border-transparent transition-colors hover:bg-[#182234] ${
+              menuOpen ? "bg-[#182234]" : ""
+            }`}
           >
             <div
               className="w-7 h-7 rounded-full flex items-center justify-center
@@ -90,12 +82,7 @@ export default function AppLayout() {
           {/* Dropdown */}
           {menuOpen && (
             <div
-              className="absolute right-0 mt-2 w-44 rounded-xl py-1 z-50"
-              style={{
-                background: "#0d1421",
-                border: "1px solid #1a2332",
-                boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
-              }}
+              className="app-surface absolute right-0 mt-2 w-44 rounded-xl py-1 z-50"
             >
               <button
                 onClick={() => {
@@ -103,14 +90,8 @@ export default function AppLayout() {
                   setMenuOpen(false);
                 }}
                 className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm
-                  transition-colors text-left"
+                  transition-colors text-left hover:bg-[#182234]"
                 style={{ color: "#e5e7eb" }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.background = "#1a2332")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.background = "transparent")
-                }
               >
                 <span>⚙️</span>
                 <span>Plan settings</span>
@@ -130,14 +111,8 @@ export default function AppLayout() {
                   setMenuOpen(false);
                 }}
                 className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm
-                  transition-colors text-left"
+                  transition-colors text-left hover:bg-[#2a1515]"
                 style={{ color: "#f87171" }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.background = "#2a1515")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.background = "transparent")
-                }
               >
                 <span>🚪</span>
                 <span>Sign out</span>
@@ -156,9 +131,10 @@ export default function AppLayout() {
       <div
         className="fixed bottom-0 left-0 right-0 z-10 flex"
         style={{
-          background: "#0d1421",
-          borderTop: "1px solid #1a2332",
-          boxShadow: "0 -4px 20px rgba(0,0,0,0.3)",
+          background: "rgba(15, 22, 36, 0.96)",
+          borderTop: "1px solid #1f2a3a",
+          boxShadow: "0 -10px 32px rgba(0,0,0,0.28)",
+          backdropFilter: "blur(12px)",
         }}
       >
         {[
@@ -169,19 +145,19 @@ export default function AppLayout() {
             key={to}
             to={to}
             end
-            className="flex-1 flex flex-col items-center pt-3 pb-2.5 gap-1"
+            className="bottom-nav-link flex-1 flex flex-col items-center pt-3 pb-2.5 gap-1"
           >
             {({ isActive }) => (
               <>
                 <div
-                  className="px-4 py-1.5 rounded-xl transition-colors"
-                  style={{ background: isActive ? "#1a1730" : "transparent" }}
+                  className="bottom-nav-icon px-4 py-1.5 rounded-xl transition-colors"
+                  style={{ background: isActive ? "#251a46" : "transparent" }}
                 >
                   <span className="text-lg leading-none">{icon}</span>
                 </div>
                 <span
                   className="text-xs font-medium transition-colors"
-                  style={{ color: isActive ? "#a78bfa" : "#4b5563" }}
+                  style={{ color: isActive ? "#c4b5fd" : undefined }}
                 >
                   {label}
                 </span>

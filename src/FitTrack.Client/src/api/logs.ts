@@ -4,6 +4,7 @@ import {
   type DailyLogDto,
   normalizeDayType,
 } from "../types";
+import { cacheKey, invalidateCachePrefix, readCache, writeCache } from "./cache";
 
 interface RawCalendarDay extends Omit<CalendarDayDto, "dayType"> {
   dayType: string | number;
@@ -13,16 +14,25 @@ export const getCalendar = async (
   planId: string,
   year: number,
   month: number,
+  options?: { force?: boolean },
 ) => {
+  const key = cacheKey("calendar", planId, year, month);
+  if (!options?.force) {
+    const cached = readCache<CalendarDayDto[]>(key);
+    if (cached) return cached;
+  }
+
   const res = await client.get<RawCalendarDay[]>(
     `/plans/${planId}/logs/calendar?year=${year}&month=${month}`,
   );
-  return res.data.map(
+  const days = res.data.map(
     (d): CalendarDayDto => ({
       ...d,
       dayType: normalizeDayType(d.dayType),
     }),
   );
+  writeCache(key, days);
+  return days;
 };
 
 export const getDayLog = async (planId: string, date: string) => {
@@ -41,6 +51,8 @@ export const toggleDay = async (
     `/plans/${planId}/logs/${logId}/toggle`,
     { isCompleted },
   );
+  invalidateCachePrefix(["calendar", planId]);
+  invalidateCachePrefix(["stats", planId]);
   return res.data;
 };
 
@@ -54,5 +66,7 @@ export const toggleExercise = async (
     `/plans/${planId}/logs/${logId}/entries/${entryId}/toggle`,
     { isCompleted },
   );
+  invalidateCachePrefix(["calendar", planId]);
+  invalidateCachePrefix(["stats", planId]);
   return res.data;
 };

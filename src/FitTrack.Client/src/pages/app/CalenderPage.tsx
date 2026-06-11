@@ -129,8 +129,8 @@ export default function CalendarPage() {
 
   const handleDrawerClose = (markedDone?: boolean) => {
     setSelectedDate(null);
-    if (markedDone) showToast("Day marked as complete! 💪");
-    if (plan) getCalendar(plan.id, year, month).then(setDays);
+    if (markedDone) showToast("Day marked as complete!");
+    if (plan) getCalendar(plan.id, year, month, { force: true }).then(setDays);
   };
 
   if (loadingPlan)
@@ -160,8 +160,7 @@ export default function CalendarPage() {
         ].map((s) => (
           <div
             key={s.label}
-            className="rounded-xl px-4 py-3"
-            style={{ background: "#0d1421", border: "1px solid #1a2332" }}
+            className="app-surface app-surface-hover rounded-xl px-4 py-3"
           >
             <div className="text-xl font-medium text-white">{s.value}</div>
             <div className="text-xs mt-0.5" style={{ color: "#6b7280" }}>
@@ -173,17 +172,13 @@ export default function CalendarPage() {
 
       {/* Calendar card */}
       <div
-        className="rounded-2xl p-4"
-        style={{ background: "#0d1421", border: "1px solid #1a2332" }}
+        className="app-surface rounded-2xl p-4"
       >
         {/* Month nav */}
         <div className="flex items-center justify-between mb-4">
           <button
             onClick={prevMonth}
-            className="p-1.5 rounded-lg transition-colors text-xl font-light"
-            style={{ color: "#6b7280" }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = "#e5e7eb")}
-            onMouseLeave={(e) => (e.currentTarget.style.color = "#6b7280")}
+            className="app-icon-button p-1.5 rounded-lg text-xl font-light"
           >
             ‹
           </button>
@@ -192,10 +187,7 @@ export default function CalendarPage() {
           </span>
           <button
             onClick={nextMonth}
-            className="p-1.5 rounded-lg transition-colors text-xl font-light"
-            style={{ color: "#6b7280" }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = "#e5e7eb")}
-            onMouseLeave={(e) => (e.currentTarget.style.color = "#6b7280")}
+            className="app-icon-button p-1.5 rounded-lg text-xl font-light"
           >
             ›
           </button>

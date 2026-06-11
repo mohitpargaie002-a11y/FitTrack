@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { isAxiosError } from "axios";
 import { createPlan } from "../../api/workoutPlans";
 import type { BuilderState, BuilderExercise } from "../../types/builder";
 import { useToast } from "../../hooks/useToast";
@@ -814,8 +815,11 @@ export default function PlanBuilderPage() {
       });
       showToast("Plan created! Let's go 💪");
       setTimeout(() => navigate("/"), 1000);
-    } catch (err: any) {
-      const msg = err?.response?.data?.message ?? "Failed to create plan.";
+    } catch (err: unknown) {
+      const msg =
+        isAxiosError<{ message?: string }>(err) && err.response?.data?.message
+          ? err.response.data.message
+          : "Failed to create plan.";
       showToast(msg, "error");
     } finally {
       setLoading(false);

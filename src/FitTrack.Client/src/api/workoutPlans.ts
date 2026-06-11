@@ -5,6 +5,7 @@ import {
   type WorkoutPlanV2Dto,
   normalizeDayType,
 } from "../types";
+import { cacheKey, invalidateCachePrefix, readCache, writeCache } from "./cache";
 
 interface RawPlanDay {
   id: string;
@@ -29,9 +30,17 @@ const normalizePlan = (plan: RawPlan): WorkoutPlanV2Dto => ({
   ),
 });
 
-export const getPlans = async () => {
+export const getPlans = async (options?: { force?: boolean }) => {
+  const key = cacheKey("plans");
+  if (!options?.force) {
+    const cached = readCache<WorkoutPlanV2Dto[]>(key);
+    if (cached) return cached;
+  }
+
   const res = await client.get<RawPlan[]>("/workoutplans/v2");
-  return res.data.map(normalizePlan);
+  const plans = res.data.map(normalizePlan);
+  writeCache(key, plans);
+  return plans;
 };
 
 export const getPlan = async (planId: string) => {
@@ -57,11 +66,15 @@ export const createPlan = async (payload: {
   }[];
 }) => {
   const res = await client.post<RawPlan>("/workoutplans/v2", payload);
+  invalidateCachePrefix(["plans"]);
   return normalizePlan(res.data);
 };
 
 export const deletePlan = async (planId: string) => {
   await client.delete(`/workoutplans/${planId}`);
+  invalidateCachePrefix(["plans"]);
+  invalidateCachePrefix(["calendar", planId]);
+  invalidateCachePrefix(["stats", planId]);
 };
 
 export const updateDayExercises = async (
@@ -78,6 +91,9 @@ export const updateDayExercises = async (
     `/workoutplans/v2/${planId}/days/${dayType}/exercises`,
     { exercises },
   );
+  invalidateCachePrefix(["plans"]);
+  invalidateCachePrefix(["calendar", planId]);
+  invalidateCachePrefix(["stats", planId]);
   return normalizePlan(res.data);
 };
 
@@ -85,5 +101,6 @@ export const seedDefaultPlan = async (startDate: string) => {
   const res = await client.post<RawPlan>(
     `/workoutplans/seed?startDate=${startDate}`,
   );
+  invalidateCachePrefix(["plans"]);
   return normalizePlan(res.data);
 };
