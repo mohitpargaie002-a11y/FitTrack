@@ -201,19 +201,30 @@ export default function PlanSettingsPage() {
         <ToastContainer toasts={toasts} />
 
         {/* Header */}
-        <div className="flex items-center gap-3 mb-6">
+        <div className="mb-6">
           <button
             onClick={() => navigate(-1)}
-            className="text-sm transition-colors"
+            className="flex items-center gap-1.5 text-xs mb-3 transition-colors"
             style={{ color: "#6b7280" }}
             onMouseEnter={(e) => (e.currentTarget.style.color = "#9ca3af")}
             onMouseLeave={(e) => (e.currentTarget.style.color = "#6b7280")}
           >
             ← Back
           </button>
-          <h1 className="text-lg font-semibold text-white flex-1">
-            {plan.name}
-          </h1>
+          <h1 className="text-xl font-semibold text-white">{plan.name}</h1>
+          <p className="text-xs mt-1" style={{ color: "#4b5563" }}>
+            {new Date(plan.startDate).toLocaleDateString("en-IN", {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+            })}{" "}
+            →{" "}
+            {new Date(plan.endDate).toLocaleDateString("en-IN", {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+            })}
+          </p>
         </div>
 
         {/* Plan info */}

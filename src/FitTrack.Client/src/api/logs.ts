@@ -1,15 +1,28 @@
 import client from "./client";
-import type { CalendarDayDto, DailyLogDto } from "../types";
+import {
+  type CalendarDayDto,
+  type DailyLogDto,
+  normalizeDayType,
+} from "../types";
+
+interface RawCalendarDay extends Omit<CalendarDayDto, "dayType"> {
+  dayType: string | number;
+}
 
 export const getCalendar = async (
   planId: string,
   year: number,
   month: number,
 ) => {
-  const res = await client.get<CalendarDayDto[]>(
+  const res = await client.get<RawCalendarDay[]>(
     `/plans/${planId}/logs/calendar?year=${year}&month=${month}`,
   );
-  return res.data;
+  return res.data.map(
+    (d): CalendarDayDto => ({
+      ...d,
+      dayType: normalizeDayType(d.dayType),
+    }),
+  );
 };
 
 export const getDayLog = async (planId: string, date: string) => {

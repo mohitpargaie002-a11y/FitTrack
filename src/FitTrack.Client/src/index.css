@@ -13,3 +13,10 @@
 .animate-fade-in {
   animation: fade-in 0.2s ease-out;
 }
+
+html,
+body,
+#root {
+  background: #0d1117;
+  min-height: 100vh;
+}

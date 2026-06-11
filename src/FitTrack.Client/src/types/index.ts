@@ -112,3 +112,17 @@ export interface DashboardStatsDto {
   exerciseStats: ExerciseStatsDto[];
   heatmapDays: CalendarDayDto[];
 }
+
+export const normalizeDayType = (dayType: string | number): string => {
+  const map: Record<string | number, string> = {
+    0: "Chest",
+    1: "Back",
+    2: "Abs",
+    3: "Rest",
+    Chest: "Chest",
+    Back: "Back",
+    Abs: "Abs",
+    Rest: "Rest",
+  };
+  return map[dayType] ?? String(dayType);
+};
